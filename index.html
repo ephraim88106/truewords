@@ -48,7 +48,7 @@
 <body>
 <header>
   <h1>말의 <span>기록</span></h1>
-  <p>정치인의 공개 발언을 출처와 함께 박제하는 아카이브</p>
+  <p>정치인의 공개 발언을 출처와 함께 박제하는 아카이브 · 6·3 지방선거</p>
 </header>
 
 <div class="wrap">
@@ -68,9 +68,9 @@
   <div id="list"></div>
 
   <div class="note">
-    <b>운영 원칙</b> — 이 아카이브에는 <b>실제로 확인 가능한 공개 발언만</b>, 반드시 출처(기사·영상 링크)와 함께 등록합니다.
-    아래 항목은 화면 구조를 보여주기 위한 <b>예시 데이터</b>이며 실존 인물의 발언이 아닙니다.
-    실제 발언을 추가할 때는 파일 안의 <code>QUOTES</code> 목록에 같은 형식으로 입력하세요.
+    <b>운영 원칙</b> — 이 아카이브에는 <b>실제로 확인 가능한 공개 발언만</b>, 반드시 출처(기사 링크)와 함께 등록합니다.
+    현재 수록된 발언은 2026년 6·3 지방선거 서울시장 후보 오세훈·정원오의 발언으로, 각 항목의 출처 링크에서 원문을 확인할 수 있습니다.
+    발언을 추가할 때는 파일 안의 <code>QUOTES</code> 목록에 같은 형식(발언·발언자·정당·날짜·맥락·출처·링크·태그)으로 입력하세요.
   </div>
 </div>
 
@@ -82,32 +82,46 @@
 // ─────────────────────────────────────────────────────────────
 const QUOTES = [
   {
-    text: "예산은 한 푼도 낭비하지 않겠습니다.",
-    who: "가나다", party: "예시당", date: "2025-03-12",
-    context: "예시 데이터 — 국회 예산결산특별위원회 발언이라는 가정의 샘플입니다.",
-    source: "예시 출처", url: "",
-    tags: ["예산", "재정"]
+    text: "이번 선거는 서울이 미래로 가느냐, 퇴보하느냐의 갈림길이다.",
+    who: "오세훈", party: "국민의힘", date: "2026-05-29",
+    context: "6·3 지방선거 사전투표 첫날, 용산구 한남동 주민센터에서 사전투표를 마친 뒤 취재진에게 한 발언.",
+    source: "머니투데이", url: "https://www.mt.co.kr/politics/2026/05/29/2026052908580991189",
+    tags: ["6·3지방선거", "서울시장", "투표"]
   },
   {
-    text: "청년 주거 문제를 임기 내 반드시 해결하겠습니다.",
-    who: "라마바", party: "보기당", date: "2024-11-02",
-    context: "예시 데이터 — 공약 발표 자리라는 가정의 샘플입니다.",
-    source: "예시 출처", url: "",
-    tags: ["부동산", "청년", "공약"]
+    text: "(더불어민주당이) 선거에서 이기게 되면 공소취소 특별검사법 추진 등 정권의 독주가 다시 시작될 것이다.",
+    who: "오세훈", party: "국민의힘", date: "2026-05-29",
+    context: "사전투표 후 정권 견제론을 강조하며. “유권자분들이 이 대통령이 겸손하게 국정을 이끌도록 만드는 방법을 생각해달라”고 덧붙였다.",
+    source: "머니투데이", url: "https://www.mt.co.kr/politics/2026/05/29/2026052908580991189",
+    tags: ["6·3지방선거", "정권견제", "특검"]
   },
   {
-    text: "어떤 외압에도 흔들리지 않겠습니다.",
-    who: "사아자", party: "예시당", date: "2025-01-20",
-    context: "예시 데이터 — 인사청문회 답변이라는 가정의 샘플입니다.",
-    source: "예시 출처", url: "",
-    tags: ["인사청문회", "독립성"]
+    text: "앞에 다 거짓말을 했다.",
+    who: "오세훈", party: "국민의힘", date: "2026-05-28",
+    context: "선관위 주관 서울시장 후보 TV토론회에서 정원오 후보와 주택 공급 공약을 두고 공방 중 한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
+    tags: ["6·3지방선거", "서울시장", "TV토론"]
   },
   {
-    text: "이 사안에 대해서는 들은 바가 없습니다.",
-    who: "차카타", party: "보기당", date: "2024-09-18",
-    context: "예시 데이터 — 기자 질의 응답이라는 가정의 샘플입니다.",
-    source: "예시 출처", url: "",
-    tags: ["해명", "의혹"]
+    text: "전시행정이 아닌 공론화 과정을 거치고, 약속한 일들은 끝까지 책임지고 완수하겠다.",
+    who: "정원오", party: "더불어민주당", date: "2026-05-26",
+    context: "‘서울의 목소리’ 시민보고회에서. 시민 의견 4818건 분석 결과 집값·월세가 최다 비중을 차지했다고 밝히며 한 발언.",
+    source: "서울신문", url: "https://www.seoul.co.kr/news/politics/local-election2026/2026/05/26/20260526500168",
+    tags: ["6·3지방선거", "서울시장", "공약", "공론화"]
+  },
+  {
+    text: "본인이 약속한 거의 절반도 못 했다.",
+    who: "정원오", party: "더불어민주당", date: "2026-05-28",
+    context: "TV토론회에서 오세훈 후보가 2021년 5년간 36만호 공급을 약속했으나 2022~2024년 3만9000호만 착공했다며 비판한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
+    tags: ["6·3지방선거", "부동산", "주택공급", "TV토론"]
+  },
+  {
+    text: "반칙하지 마라. 제 시간인데 왜 끊고 반칙을 하느냐.",
+    who: "정원오", party: "더불어민주당", date: "2026-05-28",
+    context: "TV토론회에서 오세훈 후보가 발언 도중 끼어들자 항의하며 한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
+    tags: ["6·3지방선거", "서울시장", "TV토론"]
   }
 ];
 
@@ -123,47 +137,4 @@ function init(){
   const chips=$('chips');
   allTags().forEach(t=>{
     const c=document.createElement('span'); c.className='chip'; c.textContent='#'+t;
-    c.onclick=()=>{ if(activeTags.has(t)){activeTags.delete(t);c.classList.remove('active');} else {activeTags.add(t);c.classList.add('active');} render(); };
-    chips.appendChild(c);
-  });
-  ['search','party','sort'].forEach(id=>$(id).addEventListener('input',render));
-  render();
-}
-
-function render(){
-  const q=$('search').value.trim().toLowerCase();
-  const party=$('party').value;
-  const sort=$('sort').value;
-  let items=QUOTES.filter(it=>{
-    if(party && it.party!==party) return false;
-    if(activeTags.size && ![...activeTags].every(t=>it.tags.includes(t))) return false;
-    if(q){
-      const hay=(it.text+' '+it.who+' '+it.party+' '+it.context+' '+it.tags.join(' ')).toLowerCase();
-      if(!hay.includes(q)) return false;
-    }
-    return true;
-  });
-  items.sort((a,b)=> sort==='new' ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
-  $('count').textContent = items.length + '건';
-
-  const list=$('list');
-  if(!items.length){ list.innerHTML='<div class="empty">조건에 맞는 발언이 없습니다.</div>'; return; }
-  list.innerHTML = items.map(it=>`
-    <div class="card">
-      <div class="quote">${esc(it.text)}</div>
-      <div class="meta">
-        <span class="who">${esc(it.who)}</span>
-        <span class="party">${esc(it.party)}</span>
-        <span>${esc(it.date)}</span>
-      </div>
-      <div class="ctx">${esc(it.context)}</div>
-      <div class="cardtags">${it.tags.map(t=>`<span class="cardtag">#${esc(t)}</span>`).join('')}</div>
-      <div class="src">출처: ${it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.source)} ↗</a>` : esc(it.source)}</div>
-    </div>`).join('');
-}
-
-function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-init();
-</script>
-</body>
-</html>
+    c.onclick=()=>{ if(activeTags.has(t))
