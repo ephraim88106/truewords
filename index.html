@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>말의 기록 — 정치인 발언 아카이브</title>
+<title>말의 기록 — 공직자 발언 아카이브</title>
 <style>
   :root{
     --bg:#0f1115; --card:#1a1d24; --card2:#21252e; --line:#2c313c;
@@ -31,8 +31,9 @@
   .quote{font-size:18px;font-weight:600;letter-spacing:-.3px;margin-bottom:14px}
   .quote::before{content:'\201C';color:var(--accent);font-size:22px;margin-right:2px}
   .quote::after{content:'\201D';color:var(--accent);font-size:22px;margin-left:2px}
-  .meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);font-size:13px}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;color:var(--muted);font-size:13px}
   .who{color:var(--txt);font-weight:700}
+  .role{padding:2px 9px;border-radius:6px;background:#2c2417;color:var(--accent);font-size:12px}
   .party{padding:2px 9px;border-radius:6px;background:var(--card2);font-size:12px;color:var(--accent2)}
   .ctx{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);color:#c4c9d2;font-size:14px}
   .cardtags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
@@ -43,26 +44,20 @@
   .empty{text-align:center;color:var(--muted);padding:60px 20px}
   .note{margin-top:30px;padding:16px 18px;background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:13px}
   .note b{color:var(--accent)}
-  .tip-btn{display:inline-flex;align-items:center;gap:7px;margin-top:16px;padding:11px 20px;background:var(--accent);color:#1a1d24;font-weight:700;font-size:14px;border-radius:10px;text-decoration:none;transition:.15s;box-shadow:0 4px 14px rgba(224,184,76,.25)}
-  .tip-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
-  .tip-note{margin-top:18px;padding:16px 18px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
-  .tip-note .t-txt{color:var(--muted)}
-  .tip-note .t-txt b{color:var(--accent)}
-  .tip-note .tip-btn{margin-top:0;flex-shrink:0}
 </style>
 </head>
 <body>
 <header>
   <h1>말의 <span>기록</span></h1>
-  <p>정치인의 공개 발언을 출처와 함께 박제하는 아카이브 · 6·3 지방선거</p>
-  <a class="tip-btn" href="https://docs.google.com/forms/d/1LBk8pS_bhRzed_QT2NOcY0MlPfUz_TlvL04SKK02ank/viewform" target="_blank" rel="noopener">📝 발언 제보하기</a>
+  <p>대통령·국회의원·단체장 등 공직자의 공개 발언을 출처와 함께 박제하는 아카이브</p>
 </header>
 
 <div class="wrap">
   <div class="controls">
-    <input id="search" class="search" type="text" placeholder="발언, 인물, 키워드 검색…">
+    <input id="search" class="search" type="text" placeholder="발언, 인물, 직책, 키워드 검색…">
     <div class="filters">
       <select id="party"><option value="">전체 정당</option></select>
+      <select id="role"><option value="">전체 직책</option></select>
       <select id="sort">
         <option value="new">최신순</option>
         <option value="old">오래된순</option>
@@ -74,105 +69,121 @@
 
   <div id="list"></div>
 
-  <div class="tip-note">
-    <span class="t-txt"><b>제보해 주세요</b> — 출처가 확인되는 정치인의 공개 발언을 알고 계신가요? 기사 링크와 함께 보내주시면 검토 후 등록합니다.</span>
-    <a class="tip-btn" href="https://docs.google.com/forms/d/1LBk8pS_bhRzed_QT2NOcY0MlPfUz_TlvL04SKK02ank/viewform" target="_blank" rel="noopener">📝 제보하기</a>
-  </div>
-
   <div class="note">
     <b>운영 원칙</b> — 이 아카이브에는 <b>실제로 확인 가능한 공개 발언만</b>, 반드시 출처(기사 링크)와 함께 등록합니다.
-    현재 수록된 발언은 2026년 6·3 지방선거 광역단체장 후보(서울 오세훈·정원오, 부산 박형준, 경기 추미애, 인천 유정복·박찬대)의 발언으로, 각 항목의 출처 링크에서 원문을 확인할 수 있습니다.
-    발언을 추가할 때는 파일 안의 <code>QUOTES</code> 목록에 같은 형식(발언·발언자·정당·날짜·맥락·출처·링크·태그)으로 입력하세요.
+    현재 2026년 6·3 지방선거 광역단체장 후보와 대통령·정당대표 등 현직 공직자의 발언이 수록돼 있으며, 각 항목의 출처 링크에서 원문을 확인할 수 있습니다.
+    발언을 추가할 때는 파일 안의 <code>QUOTES</code> 목록에 같은 형식(발언·발언자·직책·정당·날짜·맥락·출처·링크·태그)으로 입력하세요.
   </div>
 </div>
 
 <script>
 // ─────────────────────────────────────────────────────────────
 //  발언 데이터  ※ 모두 출처가 확인된 실제 공개 발언입니다.
-//  추가 시: text(발언) / who(발언자) / party(정당) /
+//  추가 시: text / who(발언자) / role(직책) / party(정당) /
 //  date(YYYY-MM-DD) / context(맥락) / source(출처명) / url(링크) / tags(태그배열)
 // ─────────────────────────────────────────────────────────────
 const QUOTES = [
   {
+    text: "'12·3 내란'이라는 민주주의의 중대한 위기 속에서 보여준 의장님의 담대하고 강단 있는 리더십은 무너질 뻔한 헌정 질서를 지켜낸 버팀목이었다.",
+    who: "이재명", role: "대통령", party: "더불어민주당", date: "2026-05-28",
+    context: "제22대 국회 전반기 임기를 마친 우원식 국회의장에게 X(옛 트위터)로 감사 메시지를 전하며 한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260528001293",
+    tags: ["대통령", "국회의장", "민주주의"]
+  },
+  {
+    text: "국민의 촛불혁명으로 국정 농단의 죄를 짓고 감옥 갔다 온 박근혜와 부정부패로 감옥 갔다 온 이재명",
+    who: "정청래", role: "더불어민주당 대표", party: "더불어민주당", date: "2026-05-28",
+    context: "강동구 김종무 구청장 후보 지원 유세 중 ‘이명박’을 ‘이재명’으로 잘못 말한 말실수. 곧바로 ‘이명박’으로 정정했고, 이후 유튜브 방송에서 “기억이 안 나는데 사과드린다”고 사과했다.",
+    source: "서울신문", url: "https://www.seoul.co.kr/news/politics/local-election2026/2026/05/29/20260529500028",
+    tags: ["6·3지방선거", "유세", "말실수"]
+  },
+  {
+    text: "51%대 49%로 져도, 49%의 표는 (민주당이) 인정해주지 않는다.",
+    who: "장동혁", role: "국민의힘 대표", party: "국민의힘", date: "2026-05-29",
+    context: "경기 부천 역곡상상시장 곽내경 부천시장 후보 지원유세에서 보수 결집을 호소하며 한 발언.",
+    source: "머니투데이", url: "https://www.mt.co.kr/politics/2026/05/29/2026052916123742490",
+    tags: ["6·3지방선거", "유세", "정권견제"]
+  },
+  {
     text: "이번 선거는 서울이 미래로 가느냐, 퇴보하느냐의 갈림길이다.",
-    who: "오세훈", party: "국민의힘", date: "2026-05-29",
+    who: "오세훈", role: "서울시장 후보", party: "국민의힘", date: "2026-05-29",
     context: "6·3 지방선거 사전투표 첫날, 용산구 한남동 주민센터에서 사전투표를 마친 뒤 취재진에게 한 발언.",
     source: "머니투데이", url: "https://www.mt.co.kr/politics/2026/05/29/2026052908580991189",
     tags: ["6·3지방선거", "서울시장", "투표"]
   },
   {
     text: "(더불어민주당이) 선거에서 이기게 되면 공소취소 특별검사법 추진 등 정권의 독주가 다시 시작될 것이다.",
-    who: "오세훈", party: "국민의힘", date: "2026-05-29",
+    who: "오세훈", role: "서울시장 후보", party: "국민의힘", date: "2026-05-29",
     context: "사전투표 후 정권 견제론을 강조하며. “유권자분들이 이 대통령이 겸손하게 국정을 이끌도록 만드는 방법을 생각해달라”고 덧붙였다.",
     source: "머니투데이", url: "https://www.mt.co.kr/politics/2026/05/29/2026052908580991189",
     tags: ["6·3지방선거", "정권견제", "특검"]
   },
   {
     text: "앞에 다 거짓말을 했다.",
-    who: "오세훈", party: "국민의힘", date: "2026-05-28",
+    who: "오세훈", role: "서울시장 후보", party: "국민의힘", date: "2026-05-28",
     context: "선관위 주관 서울시장 후보 TV토론회에서 정원오 후보와 주택 공급 공약을 두고 공방 중 한 발언.",
     source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
     tags: ["6·3지방선거", "서울시장", "TV토론"]
   },
   {
     text: "전시행정이 아닌 공론화 과정을 거치고, 약속한 일들은 끝까지 책임지고 완수하겠다.",
-    who: "정원오", party: "더불어민주당", date: "2026-05-26",
+    who: "정원오", role: "서울시장 후보", party: "더불어민주당", date: "2026-05-26",
     context: "‘서울의 목소리’ 시민보고회에서. 시민 의견 4818건 분석 결과 집값·월세가 최다 비중을 차지했다고 밝히며 한 발언.",
     source: "서울신문", url: "https://www.seoul.co.kr/news/politics/local-election2026/2026/05/26/20260526500168",
     tags: ["6·3지방선거", "서울시장", "공약", "공론화"]
   },
   {
     text: "본인이 약속한 거의 절반도 못 했다.",
-    who: "정원오", party: "더불어민주당", date: "2026-05-28",
+    who: "정원오", role: "서울시장 후보", party: "더불어민주당", date: "2026-05-28",
     context: "TV토론회에서 오세훈 후보가 2021년 5년간 36만호 공급을 약속했으나 2022~2024년 3만9000호만 착공했다며 비판한 발언.",
     source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
     tags: ["6·3지방선거", "부동산", "주택공급", "TV토론"]
   },
   {
     text: "반칙하지 마라. 제 시간인데 왜 끊고 반칙을 하느냐.",
-    who: "정원오", party: "더불어민주당", date: "2026-05-28",
+    who: "정원오", role: "서울시장 후보", party: "더불어민주당", date: "2026-05-28",
     context: "TV토론회에서 오세훈 후보가 발언 도중 끼어들자 항의하며 한 발언.",
     source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
     tags: ["6·3지방선거", "서울시장", "TV토론"]
   },
   {
     text: "행정 성과는 5년에서 10년 뒤 나타나는 만큼 진행 중인 정책을 마무리하는 것이 책임 있는 선택이다.",
-    who: "박형준", party: "국민의힘", date: "2026-05-12",
+    who: "박형준", role: "부산시장 후보", party: "국민의힘", date: "2026-05-12",
     context: "부산시장 3선 도전 배경을 묻는 뉴스핌 인터뷰에서 시정의 연속성을 강조하며 한 발언.",
     source: "뉴스핌", url: "https://www.newspim.com/news/view/20260512000470",
     tags: ["6·3지방선거", "부산시장", "3선", "시정연속성"]
   },
   {
     text: "대통령은 왕이 아니다. 민주공화국에서 대통령은 국민이 권한을 위임한 공복이지, 자기 사건을 법으로 지울 수 있는 사람이 아니다.",
-    who: "박형준", party: "국민의힘", date: "2026-05-12",
+    who: "박형준", role: "부산시장 후보", party: "국민의힘", date: "2026-05-12",
     context: "뉴스핌 인터뷰에서 여당의 이른바 ‘공소취소 특검법’에 대한 입장을 밝히며 한 발언.",
     source: "뉴스핌", url: "https://www.newspim.com/news/view/20260512000470",
     tags: ["6·3지방선거", "부산시장", "특검", "법치"]
   },
   {
     text: "6월 3일 이재명 정부의 국정 철학과 기조가 지방자치까지 스며들 수 있도록 보조를 맞출 수 있는 유능한 일꾼을 뽑아달라.",
-    who: "추미애", party: "더불어민주당", date: "2026-05-29",
+    who: "추미애", role: "경기도지사 후보", party: "더불어민주당", date: "2026-05-29",
     context: "경기도지사 후보로서 사전투표 첫날 수원 인계동 행정복지센터에서 사전투표를 마친 뒤 한 발언.",
     source: "파이낸셜뉴스", url: "https://www.fnnews.com/news/202605291102502158",
     tags: ["6·3지방선거", "경기도지사", "투표", "국정"]
   },
   {
     text: "31개 시·군 단체장, 도의원, 모두 당선시켜 주시면 효능감 100%로 돌려드리겠다.",
-    who: "추미애", party: "더불어민주당", date: "2026-05-29",
+    who: "추미애", role: "경기도지사 후보", party: "더불어민주당", date: "2026-05-29",
     context: "사전투표 후 지지를 호소하며. 경기도민이 어디 살든 자부심을 가질 도정을 만들겠다고 강조했다.",
     source: "파이낸셜뉴스", url: "https://www.fnnews.com/news/202605291102502158",
     tags: ["6·3지방선거", "경기도지사", "투표"]
   },
   {
     text: "이번 선거는 단순한 정치 경쟁이 아니라 인천의 미래를 결정하는 중요한 선택이다.",
-    who: "유정복", party: "국민의힘", date: "2026-05-27",
+    who: "유정복", role: "인천시장 후보", party: "국민의힘", date: "2026-05-27",
     context: "인천시장 3선에 도전하며 뉴스핌 인터뷰에서. “검증된 경험과 책임 있는 리더십으로 세계 초일류 인천국제자유특별시를 완성하겠다”고 밝혔다.",
     source: "뉴스핌", url: "https://www.newspim.com/news/view/20260526001232",
     tags: ["6·3지방선거", "인천시장", "3선"]
   },
   {
     text: "우리 적은 북한 정권과 북한군이라는 답변을 기대하시는 것 아니냐. 국민의힘의 주적론은 한심하다.",
-    who: "박찬대", party: "더불어민주당", date: "2026-05-26",
+    who: "박찬대", role: "인천시장 후보", party: "더불어민주당", date: "2026-05-26",
     context: "인천MBC 인천시장 후보 TV토론회에서 유정복 후보가 “주적이 누구냐”고 묻자 ‘색깔론’이라며 반박한 발언.",
     source: "아주경제", url: "https://www.ajunews.com/view/20260526233955913",
     tags: ["6·3지방선거", "인천시장", "TV토론", "색깔론"]
@@ -184,29 +195,32 @@ const $ = id => document.getElementById(id);
 let activeTags = new Set();
 
 function allTags(){ const s=new Set(); QUOTES.forEach(q=>q.tags.forEach(t=>s.add(t))); return [...s].sort(); }
-function allParties(){ const s=new Set(); QUOTES.forEach(q=>s.add(q.party)); return [...s].sort(); }
+function uniq(key){ return [...new Set(QUOTES.map(q=>q[key]))].sort(); }
 
 function init(){
-  allParties().forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; $('party').appendChild(o); });
+  uniq('party').forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; $('party').appendChild(o); });
+  uniq('role').forEach(r=>{ const o=document.createElement('option'); o.value=r; o.textContent=r; $('role').appendChild(o); });
   const chips=$('chips');
   allTags().forEach(t=>{
     const c=document.createElement('span'); c.className='chip'; c.textContent='#'+t;
     c.onclick=()=>{ if(activeTags.has(t)){activeTags.delete(t);c.classList.remove('active');} else {activeTags.add(t);c.classList.add('active');} render(); };
     chips.appendChild(c);
   });
-  ['search','party','sort'].forEach(id=>$(id).addEventListener('input',render));
+  ['search','party','role','sort'].forEach(id=>$(id).addEventListener('input',render));
   render();
 }
 
 function render(){
   const q=$('search').value.trim().toLowerCase();
   const party=$('party').value;
+  const role=$('role').value;
   const sort=$('sort').value;
   let items=QUOTES.filter(it=>{
     if(party && it.party!==party) return false;
+    if(role && it.role!==role) return false;
     if(activeTags.size && ![...activeTags].every(t=>it.tags.includes(t))) return false;
     if(q){
-      const hay=(it.text+' '+it.who+' '+it.party+' '+it.context+' '+it.tags.join(' ')).toLowerCase();
+      const hay=(it.text+' '+it.who+' '+it.role+' '+it.party+' '+it.context+' '+it.tags.join(' ')).toLowerCase();
       if(!hay.includes(q)) return false;
     }
     return true;
@@ -221,6 +235,7 @@ function render(){
       <div class="quote">${esc(it.text)}</div>
       <div class="meta">
         <span class="who">${esc(it.who)}</span>
+        <span class="role">${esc(it.role)}</span>
         <span class="party">${esc(it.party)}</span>
         <span>${esc(it.date)}</span>
       </div>
