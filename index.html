@@ -232,4 +232,52 @@ function render(){
     if(role && it.role!==role) return false;
     if(activeTags.size && ![...activeTags].every(t=>it.tags.includes(t))) return false;
     if(q){
-      const hay=(it.text+'
+      const hay=(it.text+' '+it.who+' '+(it.role||'')+' '+it.party+' '+it.context+' '+it.tags.join(' ')).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  items.sort((a,b)=> sort==='old' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
+
+  $('count').textContent = items.length + '건';
+
+  const list=$('list');
+  if(!items.length){
+    list.innerHTML = '<div class="empty">조건에 맞는 발언이 없습니다.</div>';
+    return;
+  }
+
+  list.innerHTML = items.map(it=>`
+    <div class="card">
+      <div class="quote">${esc(it.text)}</div>
+      <div class="meta">
+        <span class="who">${esc(it.who)}</span>
+        ${it.role ? `<span class="party">${esc(it.role)}</span>` : ''}
+        <span class="party">${esc(it.party)}</span>
+        <span>${esc(it.date)}</span>
+      </div>
+      <div class="ctx">${esc(it.context)}</div>
+      <div class="cardtags">${it.tags.map(t=>`<span class="cardtag" data-tag="${esc(t)}">#${esc(t)}</span>`).join('')}</div>
+      <div class="src">출처: <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.source)}</a></div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.cardtag').forEach(el=>{
+    el.onclick=()=>{
+      const t=el.dataset.tag;
+      if(!activeTags.has(t)){
+        activeTags.add(t);
+        document.querySelectorAll('.chips .chip').forEach(c=>{ if(c.textContent==='#'+t) c.classList.add('active'); });
+        render();
+      }
+    };
+  });
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+init();
+</script>
+</body>
+</html>
