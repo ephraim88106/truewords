@@ -44,12 +44,19 @@
   .empty{text-align:center;color:var(--muted);padding:60px 20px}
   .note{margin-top:30px;padding:16px 18px;background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:13px}
   .note b{color:var(--accent)}
+  .tip-btn{display:inline-flex;align-items:center;gap:7px;margin-top:16px;padding:11px 20px;background:var(--accent);color:#1a1d24;font-weight:700;font-size:14px;border-radius:10px;text-decoration:none;transition:.15s;box-shadow:0 4px 14px rgba(224,184,76,.25)}
+  .tip-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .tip-note{margin-top:18px;padding:16px 18px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+  .tip-note .t-txt{color:var(--muted)}
+  .tip-note .t-txt b{color:var(--accent)}
+  .tip-note .tip-btn{margin-top:0;flex-shrink:0}
 </style>
 </head>
 <body>
 <header>
   <h1>말의 <span>기록</span></h1>
   <p>대통령·국회의원·단체장 등 공직자의 공개 발언을 출처와 함께 박제하는 아카이브</p>
+  <a class="tip-btn" href="https://docs.google.com/forms/d/1LBk8pS_bhRzed_QT2NOcY0MlPfUz_TlvL04SKK02ank/viewform" target="_blank" rel="noopener">📝 발언 제보하기</a>
 </header>
 
 <div class="wrap">
@@ -68,6 +75,11 @@
   </div>
 
   <div id="list"></div>
+
+  <div class="tip-note">
+    <span class="t-txt"><b>제보해 주세요</b> — 출처가 확인되는 공직자의 공개 발언을 알고 계신가요? 기사 링크와 함께 보내주시면 검토 후 등록합니다.</span>
+    <a class="tip-btn" href="https://docs.google.com/forms/d/1LBk8pS_bhRzed_QT2NOcY0MlPfUz_TlvL04SKK02ank/viewform" target="_blank" rel="noopener">📝 제보하기</a>
+  </div>
 
   <div class="note">
     <b>운영 원칙</b> — 이 아카이브에는 <b>실제로 확인 가능한 공개 발언만</b>, 반드시 출처(기사 링크)와 함께 등록합니다.
@@ -220,33 +232,4 @@ function render(){
     if(role && it.role!==role) return false;
     if(activeTags.size && ![...activeTags].every(t=>it.tags.includes(t))) return false;
     if(q){
-      const hay=(it.text+' '+it.who+' '+it.role+' '+it.party+' '+it.context+' '+it.tags.join(' ')).toLowerCase();
-      if(!hay.includes(q)) return false;
-    }
-    return true;
-  });
-  items.sort((a,b)=> sort==='new' ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
-  $('count').textContent = items.length + '건';
-
-  const list=$('list');
-  if(!items.length){ list.innerHTML='<div class="empty">조건에 맞는 발언이 없습니다.</div>'; return; }
-  list.innerHTML = items.map(it=>`
-    <div class="card">
-      <div class="quote">${esc(it.text)}</div>
-      <div class="meta">
-        <span class="who">${esc(it.who)}</span>
-        <span class="role">${esc(it.role)}</span>
-        <span class="party">${esc(it.party)}</span>
-        <span>${esc(it.date)}</span>
-      </div>
-      <div class="ctx">${esc(it.context)}</div>
-      <div class="cardtags">${it.tags.map(t=>`<span class="cardtag">#${esc(t)}</span>`).join('')}</div>
-      <div class="src">출처: ${it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.source)} ↗</a>` : esc(it.source)}</div>
-    </div>`).join('');
-}
-
-function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-init();
-</script>
-</body>
-</html>
+      const hay=(it.text+'
