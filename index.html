@@ -69,15 +69,15 @@
 
   <div class="note">
     <b>운영 원칙</b> — 이 아카이브에는 <b>실제로 확인 가능한 공개 발언만</b>, 반드시 출처(기사 링크)와 함께 등록합니다.
-    현재 수록된 발언은 2026년 6·3 지방선거 서울시장 후보 오세훈·정원오의 발언으로, 각 항목의 출처 링크에서 원문을 확인할 수 있습니다.
+    현재 수록된 발언은 2026년 6·3 지방선거 광역단체장 후보(서울 오세훈·정원오, 부산 박형준, 경기 추미애, 인천 유정복·박찬대)의 발언으로, 각 항목의 출처 링크에서 원문을 확인할 수 있습니다.
     발언을 추가할 때는 파일 안의 <code>QUOTES</code> 목록에 같은 형식(발언·발언자·정당·날짜·맥락·출처·링크·태그)으로 입력하세요.
   </div>
 </div>
 
 <script>
 // ─────────────────────────────────────────────────────────────
-//  발언 데이터  ※ 아래는 구조 시연용 예시(가상 인물)입니다.
-//  실제 발언 추가 시: text(발언) / who(발언자) / party(정당) /
+//  발언 데이터  ※ 모두 출처가 확인된 실제 공개 발언입니다.
+//  추가 시: text(발언) / who(발언자) / party(정당) /
 //  date(YYYY-MM-DD) / context(맥락) / source(출처명) / url(링크) / tags(태그배열)
 // ─────────────────────────────────────────────────────────────
 const QUOTES = [
@@ -122,6 +122,48 @@ const QUOTES = [
     context: "TV토론회에서 오세훈 후보가 발언 도중 끼어들자 항의하며 한 발언.",
     source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
     tags: ["6·3지방선거", "서울시장", "TV토론"]
+  },
+  {
+    text: "행정 성과는 5년에서 10년 뒤 나타나는 만큼 진행 중인 정책을 마무리하는 것이 책임 있는 선택이다.",
+    who: "박형준", party: "국민의힘", date: "2026-05-12",
+    context: "부산시장 3선 도전 배경을 묻는 뉴스핌 인터뷰에서 시정의 연속성을 강조하며 한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260512000470",
+    tags: ["6·3지방선거", "부산시장", "3선", "시정연속성"]
+  },
+  {
+    text: "대통령은 왕이 아니다. 민주공화국에서 대통령은 국민이 권한을 위임한 공복이지, 자기 사건을 법으로 지울 수 있는 사람이 아니다.",
+    who: "박형준", party: "국민의힘", date: "2026-05-12",
+    context: "뉴스핌 인터뷰에서 여당의 이른바 ‘공소취소 특검법’에 대한 입장을 밝히며 한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260512000470",
+    tags: ["6·3지방선거", "부산시장", "특검", "법치"]
+  },
+  {
+    text: "6월 3일 이재명 정부의 국정 철학과 기조가 지방자치까지 스며들 수 있도록 보조를 맞출 수 있는 유능한 일꾼을 뽑아달라.",
+    who: "추미애", party: "더불어민주당", date: "2026-05-29",
+    context: "경기도지사 후보로서 사전투표 첫날 수원 인계동 행정복지센터에서 사전투표를 마친 뒤 한 발언.",
+    source: "파이낸셜뉴스", url: "https://www.fnnews.com/news/202605291102502158",
+    tags: ["6·3지방선거", "경기도지사", "투표", "국정"]
+  },
+  {
+    text: "31개 시·군 단체장, 도의원, 모두 당선시켜 주시면 효능감 100%로 돌려드리겠다.",
+    who: "추미애", party: "더불어민주당", date: "2026-05-29",
+    context: "사전투표 후 지지를 호소하며. 경기도민이 어디 살든 자부심을 가질 도정을 만들겠다고 강조했다.",
+    source: "파이낸셜뉴스", url: "https://www.fnnews.com/news/202605291102502158",
+    tags: ["6·3지방선거", "경기도지사", "투표"]
+  },
+  {
+    text: "이번 선거는 단순한 정치 경쟁이 아니라 인천의 미래를 결정하는 중요한 선택이다.",
+    who: "유정복", party: "국민의힘", date: "2026-05-27",
+    context: "인천시장 3선에 도전하며 뉴스핌 인터뷰에서. “검증된 경험과 책임 있는 리더십으로 세계 초일류 인천국제자유특별시를 완성하겠다”고 밝혔다.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260526001232",
+    tags: ["6·3지방선거", "인천시장", "3선"]
+  },
+  {
+    text: "우리 적은 북한 정권과 북한군이라는 답변을 기대하시는 것 아니냐. 국민의힘의 주적론은 한심하다.",
+    who: "박찬대", party: "더불어민주당", date: "2026-05-26",
+    context: "인천MBC 인천시장 후보 TV토론회에서 유정복 후보가 “주적이 누구냐”고 묻자 ‘색깔론’이라며 반박한 발언.",
+    source: "아주경제", url: "https://www.ajunews.com/view/20260526233955913",
+    tags: ["6·3지방선거", "인천시장", "TV토론", "색깔론"]
   }
 ];
 
@@ -137,74 +179,46 @@ function init(){
   const chips=$('chips');
   allTags().forEach(t=>{
     const c=document.createElement('span'); c.className='chip'; c.textContent='#'+t;
-    c.onclick=()=>{
-      if(activeTags.has(t)) activeTags.delete(t); else activeTags.add(t);
-      c.classList.toggle('active');
-      render();
-    };
+    c.onclick=()=>{ if(activeTags.has(t)){activeTags.delete(t);c.classList.remove('active');} else {activeTags.add(t);c.classList.add('active');} render(); };
     chips.appendChild(c);
   });
-
-  $('search').addEventListener('input', render);
-  $('party').addEventListener('change', render);
-  $('sort').addEventListener('change', render);
-
+  ['search','party','sort'].forEach(id=>$(id).addEventListener('input',render));
   render();
 }
 
-function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-
 function render(){
-  const q = $('search').value.trim().toLowerCase();
-  const party = $('party').value;
-  const sort = $('sort').value;
-  const list = $('list');
-
-  let items = QUOTES.filter(item=>{
-    if(party && item.party !== party) return false;
-    if(activeTags.size && ![...activeTags].every(t=>item.tags.includes(t))) return false;
+  const q=$('search').value.trim().toLowerCase();
+  const party=$('party').value;
+  const sort=$('sort').value;
+  let items=QUOTES.filter(it=>{
+    if(party && it.party!==party) return false;
+    if(activeTags.size && ![...activeTags].every(t=>it.tags.includes(t))) return false;
     if(q){
-      const hay = (item.text+' '+item.who+' '+item.context+' '+item.tags.join(' ')).toLowerCase();
+      const hay=(it.text+' '+it.who+' '+it.party+' '+it.context+' '+it.tags.join(' ')).toLowerCase();
       if(!hay.includes(q)) return false;
     }
     return true;
   });
-
-  items.sort((a,b)=> sort==='old' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
-
+  items.sort((a,b)=> sort==='new' ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
   $('count').textContent = items.length + '건';
 
-  if(!items.length){
-    list.innerHTML = '<div class="empty">조건에 맞는 발언이 없습니다.</div>';
-    return;
-  }
-
-  list.innerHTML = items.map(item=>`
+  const list=$('list');
+  if(!items.length){ list.innerHTML='<div class="empty">조건에 맞는 발언이 없습니다.</div>'; return; }
+  list.innerHTML = items.map(it=>`
     <div class="card">
-      <div class="quote">${esc(item.text)}</div>
+      <div class="quote">${esc(it.text)}</div>
       <div class="meta">
-        <span class="who">${esc(item.who)}</span>
-        <span class="party">${esc(item.party)}</span>
-        <span>${esc(item.date)}</span>
+        <span class="who">${esc(it.who)}</span>
+        <span class="party">${esc(it.party)}</span>
+        <span>${esc(it.date)}</span>
       </div>
-      <div class="ctx">${esc(item.context)}</div>
-      <div class="cardtags">${item.tags.map(t=>`<span class="cardtag" data-tag="${esc(t)}">#${esc(t)}</span>`).join('')}</div>
-      <div class="src">출처: <a href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.source)}</a></div>
-    </div>
-  `).join('');
-
-  list.querySelectorAll('.cardtag').forEach(el=>{
-    el.onclick=()=>{
-      const t = el.dataset.tag;
-      if(!activeTags.has(t)){
-        activeTags.add(t);
-        document.querySelectorAll('.chips .chip').forEach(c=>{ if(c.textContent==='#'+t) c.classList.add('active'); });
-        render();
-      }
-    };
-  });
+      <div class="ctx">${esc(it.context)}</div>
+      <div class="cardtags">${it.tags.map(t=>`<span class="cardtag">#${esc(t)}</span>`).join('')}</div>
+      <div class="src">출처: ${it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.source)} ↗</a>` : esc(it.source)}</div>
+    </div>`).join('');
 }
 
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 init();
 </script>
 </body>
