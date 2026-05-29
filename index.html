@@ -137,4 +137,75 @@ function init(){
   const chips=$('chips');
   allTags().forEach(t=>{
     const c=document.createElement('span'); c.className='chip'; c.textContent='#'+t;
-    c.onclick=()=>{ if(activeTags.has(t))
+    c.onclick=()=>{
+      if(activeTags.has(t)) activeTags.delete(t); else activeTags.add(t);
+      c.classList.toggle('active');
+      render();
+    };
+    chips.appendChild(c);
+  });
+
+  $('search').addEventListener('input', render);
+  $('party').addEventListener('change', render);
+  $('sort').addEventListener('change', render);
+
+  render();
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function render(){
+  const q = $('search').value.trim().toLowerCase();
+  const party = $('party').value;
+  const sort = $('sort').value;
+  const list = $('list');
+
+  let items = QUOTES.filter(item=>{
+    if(party && item.party !== party) return false;
+    if(activeTags.size && ![...activeTags].every(t=>item.tags.includes(t))) return false;
+    if(q){
+      const hay = (item.text+' '+item.who+' '+item.context+' '+item.tags.join(' ')).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  items.sort((a,b)=> sort==='old' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
+
+  $('count').textContent = items.length + '건';
+
+  if(!items.length){
+    list.innerHTML = '<div class="empty">조건에 맞는 발언이 없습니다.</div>';
+    return;
+  }
+
+  list.innerHTML = items.map(item=>`
+    <div class="card">
+      <div class="quote">${esc(item.text)}</div>
+      <div class="meta">
+        <span class="who">${esc(item.who)}</span>
+        <span class="party">${esc(item.party)}</span>
+        <span>${esc(item.date)}</span>
+      </div>
+      <div class="ctx">${esc(item.context)}</div>
+      <div class="cardtags">${item.tags.map(t=>`<span class="cardtag" data-tag="${esc(t)}">#${esc(t)}</span>`).join('')}</div>
+      <div class="src">출처: <a href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.source)}</a></div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.cardtag').forEach(el=>{
+    el.onclick=()=>{
+      const t = el.dataset.tag;
+      if(!activeTags.has(t)){
+        activeTags.add(t);
+        document.querySelectorAll('.chips .chip').forEach(c=>{ if(c.textContent==='#'+t) c.classList.add('active'); });
+        render();
+      }
+    };
+  });
+}
+
+init();
+</script>
+</body>
+</html>
