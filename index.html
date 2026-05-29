@@ -1,14 +1,140 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>말의 기록 — 정치인 발언 아카이브</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#1a1d24; --card2:#21252e; --line:#2c313c;
+    --txt:#e8eaed; --muted:#9aa0ab; --accent:#e0b84c; --accent2:#5b9dd9;
+    --tag:#2a3340; --tagtxt:#9fc3e8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.6}
+  header{padding:40px 20px 28px;text-align:center;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#13161c,#0f1115)}
+  header h1{font-size:30px;letter-spacing:-1px;font-weight:800}
+  header h1 span{color:var(--accent)}
+  header p{color:var(--muted);margin-top:8px;font-size:14px}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 16px 80px}
+  .controls{position:sticky;top:0;z-index:5;background:var(--bg);padding:16px 0;border-bottom:1px solid var(--line);margin-bottom:20px}
+  .search{width:100%;padding:13px 16px;background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--txt);font-size:15px}
+  .search::placeholder{color:var(--muted)}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+  select{padding:8px 12px;background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--txt);font-size:13px}
+  .count{margin-left:auto;color:var(--muted);font-size:13px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .chip{padding:5px 11px;background:var(--tag);color:var(--tagtxt);border:1px solid transparent;border-radius:20px;font-size:12px;cursor:pointer;user-select:none}
+  .chip.active{background:var(--accent2);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:16px;transition:.15s}
+  .card:hover{border-color:#3a4150}
+  .quote{font-size:18px;font-weight:600;letter-spacing:-.3px;margin-bottom:14px}
+  .quote::before{content:'\201C';color:var(--accent);font-size:22px;margin-right:2px}
+  .quote::after{content:'\201D';color:var(--accent);font-size:22px;margin-left:2px}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);font-size:13px}
+  .who{color:var(--txt);font-weight:700}
+  .party{padding:2px 9px;border-radius:6px;background:var(--card2);font-size:12px;color:var(--accent2)}
+  .ctx{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);color:#c4c9d2;font-size:14px}
+  .cardtags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+  .cardtag{font-size:11px;color:var(--tagtxt);background:var(--tag);padding:3px 9px;border-radius:14px;cursor:pointer}
+  .src{margin-top:12px;font-size:13px}
+  .src a{color:var(--accent2);text-decoration:none}
+  .src a:hover{text-decoration:underline}
+  .empty{text-align:center;color:var(--muted);padding:60px 20px}
+  .note{margin-top:30px;padding:16px 18px;background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:13px}
+  .note b{color:var(--accent)}
+</style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
-</body>
-</html>
+<header>
+  <h1>말의 <span>기록</span></h1>
+  <p>정치인의 공개 발언을 출처와 함께 박제하는 아카이브 · 6·3 지방선거</p>
+</header>
+
+<div class="wrap">
+  <div class="controls">
+    <input id="search" class="search" type="text" placeholder="발언, 인물, 키워드 검색…">
+    <div class="filters">
+      <select id="party"><option value="">전체 정당</option></select>
+      <select id="sort">
+        <option value="new">최신순</option>
+        <option value="old">오래된순</option>
+      </select>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="note">
+    <b>운영 원칙</b> — 이 아카이브에는 <b>실제로 확인 가능한 공개 발언만</b>, 반드시 출처(기사 링크)와 함께 등록합니다.
+    현재 수록된 발언은 2026년 6·3 지방선거 서울시장 후보 오세훈·정원오의 발언으로, 각 항목의 출처 링크에서 원문을 확인할 수 있습니다.
+    발언을 추가할 때는 파일 안의 <code>QUOTES</code> 목록에 같은 형식(발언·발언자·정당·날짜·맥락·출처·링크·태그)으로 입력하세요.
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+//  발언 데이터  ※ 아래는 구조 시연용 예시(가상 인물)입니다.
+//  실제 발언 추가 시: text(발언) / who(발언자) / party(정당) /
+//  date(YYYY-MM-DD) / context(맥락) / source(출처명) / url(링크) / tags(태그배열)
+// ─────────────────────────────────────────────────────────────
+const QUOTES = [
+  {
+    text: "이번 선거는 서울이 미래로 가느냐, 퇴보하느냐의 갈림길이다.",
+    who: "오세훈", party: "국민의힘", date: "2026-05-29",
+    context: "6·3 지방선거 사전투표 첫날, 용산구 한남동 주민센터에서 사전투표를 마친 뒤 취재진에게 한 발언.",
+    source: "머니투데이", url: "https://www.mt.co.kr/politics/2026/05/29/2026052908580991189",
+    tags: ["6·3지방선거", "서울시장", "투표"]
+  },
+  {
+    text: "(더불어민주당이) 선거에서 이기게 되면 공소취소 특별검사법 추진 등 정권의 독주가 다시 시작될 것이다.",
+    who: "오세훈", party: "국민의힘", date: "2026-05-29",
+    context: "사전투표 후 정권 견제론을 강조하며. “유권자분들이 이 대통령이 겸손하게 국정을 이끌도록 만드는 방법을 생각해달라”고 덧붙였다.",
+    source: "머니투데이", url: "https://www.mt.co.kr/politics/2026/05/29/2026052908580991189",
+    tags: ["6·3지방선거", "정권견제", "특검"]
+  },
+  {
+    text: "앞에 다 거짓말을 했다.",
+    who: "오세훈", party: "국민의힘", date: "2026-05-28",
+    context: "선관위 주관 서울시장 후보 TV토론회에서 정원오 후보와 주택 공급 공약을 두고 공방 중 한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
+    tags: ["6·3지방선거", "서울시장", "TV토론"]
+  },
+  {
+    text: "전시행정이 아닌 공론화 과정을 거치고, 약속한 일들은 끝까지 책임지고 완수하겠다.",
+    who: "정원오", party: "더불어민주당", date: "2026-05-26",
+    context: "‘서울의 목소리’ 시민보고회에서. 시민 의견 4818건 분석 결과 집값·월세가 최다 비중을 차지했다고 밝히며 한 발언.",
+    source: "서울신문", url: "https://www.seoul.co.kr/news/politics/local-election2026/2026/05/26/20260526500168",
+    tags: ["6·3지방선거", "서울시장", "공약", "공론화"]
+  },
+  {
+    text: "본인이 약속한 거의 절반도 못 했다.",
+    who: "정원오", party: "더불어민주당", date: "2026-05-28",
+    context: "TV토론회에서 오세훈 후보가 2021년 5년간 36만호 공급을 약속했으나 2022~2024년 3만9000호만 착공했다며 비판한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
+    tags: ["6·3지방선거", "부동산", "주택공급", "TV토론"]
+  },
+  {
+    text: "반칙하지 마라. 제 시간인데 왜 끊고 반칙을 하느냐.",
+    who: "정원오", party: "더불어민주당", date: "2026-05-28",
+    context: "TV토론회에서 오세훈 후보가 발언 도중 끼어들자 항의하며 한 발언.",
+    source: "뉴스핌", url: "https://www.newspim.com/news/view/20260529000005",
+    tags: ["6·3지방선거", "서울시장", "TV토론"]
+  }
+];
+
+// ───────── 렌더링 로직 ─────────
+const $ = id => document.getElementById(id);
+let activeTags = new Set();
+
+function allTags(){ const s=new Set(); QUOTES.forEach(q=>q.tags.forEach(t=>s.add(t))); return [...s].sort(); }
+function allParties(){ const s=new Set(); QUOTES.forEach(q=>s.add(q.party)); return [...s].sort(); }
+
+function init(){
+  allParties().forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; $('party').appendChild(o); });
+  const chips=$('chips');
+  allTags().forEach(t=>{
+    const c=document.createElement('span'); c.className='chip'; c.textContent='#'+t;
+    c.onclick=()=>{ if(activeTags.has(t))
