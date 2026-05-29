@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>말의 기록 — 정치인 발언 아카이브</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#1a1d24; --card2:#21252e; --line:#2c313c;
+    --txt:#e8eaed; --muted:#9aa0ab; --accent:#e0b84c; --accent2:#5b9dd9;
+    --tag:#2a3340; --tagtxt:#9fc3e8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.6}
+  header{padding:40px 20px 28px;text-align:center;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#13161c,#0f1115)}
+  header h1{font-size:30px;letter-spacing:-1px;font-weight:800}
+  header h1 span{color:var(--accent)}
+  header p{color:var(--muted);margin-top:8px;font-size:14px}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 16px 80px}
+  .controls{position:sticky;top:0;z-index:5;background:var(--bg);padding:16px 0;border-bottom:1px solid var(--line);margin-bottom:20px}
+  .search{width:100%;padding:13px 16px;background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--txt);font-size:15px}
+  .search::placeholder{color:var(--muted)}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+  select{padding:8px 12px;background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--txt);font-size:13px}
+  .count{margin-left:auto;color:var(--muted);font-size:13px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .chip{padding:5px 11px;background:var(--tag);color:var(--tagtxt);border:1px solid transparent;border-radius:20px;font-size:12px;cursor:pointer;user-select:none}
+  .chip.active{background:var(--accent2);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:16px;transition:.15s}
+  .card:hover{border-color:#3a4150}
+  .quote{font-size:18px;font-weight:600;letter-spacing:-.3px;margin-bottom:14px}
+  .quote::before{content:'\201C';color:var(--accent);font-size:22px;margin-right:2px}
+  .quote::after{content:'\201D';color:var(--accent);font-size:22px;margin-left:2px}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);font-size:13px}
+  .who{color:var(--txt);font-weight:700}
+  .party{padding:2px 9px;border-radius:6px;background:var(--card2);font-size:12px;color:var(--accent2)}
+  .ctx{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);color:#c4c9d2;font-size:14px}
+  .cardtags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+  .cardtag{font-size:11px;color:var(--tagtxt);background:var(--tag);padding:3px 9px;border-radius:14px;cursor:pointer}
+  .src{margin-top:12px;font-size:13px}
+  .src a{color:var(--accent2);text-decoration:none}
+  .src a:hover{text-decoration:underline}
+  .empty{text-align:center;color:var(--muted);padding:60px 20px}
+  .note{margin-top:30px;padding:16px 18px;background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:13px}
+  .note b{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1>말의 <span>기록</span></h1>
+  <p>정치인의 공개 발언을 출처와 함께 박제하는 아카이브</p>
+</header>
 
+<div class="wrap">
+  <div class="controls">
+    <input id="search" class="search" type="text" placeholder="발언, 인물, 키워드 검색…">
+    <div class="filters">
+      <select id="party"><option value="">전체 정당</option></select>
+      <select id="sort">
+        <option value="new">최신순</option>
+        <option value="old">오래된순</option>
+      </select>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="note">
+    <b>운영 원칙</b> — 이 아카이브에는 <b>실제로 확인 가능한 공개 발언만</b>, 반드시 출처(기사·영상 링크)와 함께 등록합니다.
+    아래 항목은 화면 구조를 보여주기 위한 <b>예시 데이터</b>이며 실존 인물의 발언이 아닙니다.
+    실제 발언을 추가할 때는 파일 안의 <code>QUOTES</code> 목록에 같은 형식으로 입력하세요.
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+//  발언 데이터  ※ 아래는 구조 시연용 예시(가상 인물)입니다.
+//  실제 발언 추가 시: text(발언) / who(발언자) / party(정당) /
+//  date(YYYY-MM-DD) / context(맥락) / source(출처명) / url(링크) / tags(태그배열)
+// ─────────────────────────────────────────────────────────────
+const QUOTES = [
+  {
+    text: "예산은 한 푼도 낭비하지 않겠습니다.",
+    who: "가나다", party: "예시당", date: "2025-03-12",
+    context: "예시 데이터 — 국회 예산결산특별위원회 발언이라는 가정의 샘플입니다.",
+    source: "예시 출처", url: "",
+    tags: ["예산", "재정"]
+  },
+  {
+    text: "청년 주거 문제를 임기 내 반드시 해결하겠습니다.",
+    who: "라마바", party: "보기당", date: "2024-11-02",
+    context: "예시 데이터 — 공약 발표 자리라는 가정의 샘플입니다.",
+    source: "예시 출처", url: "",
+    tags: ["부동산", "청년", "공약"]
+  },
+  {
+    text: "어떤 외압에도 흔들리지 않겠습니다.",
+    who: "사아자", party: "예시당", date: "2025-01-20",
+    context: "예시 데이터 — 인사청문회 답변이라는 가정의 샘플입니다.",
+    source: "예시 출처", url: "",
+    tags: ["인사청문회", "독립성"]
+  },
+  {
+    text: "이 사안에 대해서는 들은 바가 없습니다.",
+    who: "차카타", party: "보기당", date: "2024-09-18",
+    context: "예시 데이터 — 기자 질의 응답이라는 가정의 샘플입니다.",
+    source: "예시 출처", url: "",
+    tags: ["해명", "의혹"]
+  }
+];
+
+// ───────── 렌더링 로직 ─────────
+const $ = id => document.getElementById(id);
+let activeTags = new Set();
+
+function allTags(){ const s=new Set(); QUOTES.forEach(q=>q.tags.forEach(t=>s.add(t))); return [...s].sort(); }
+function allParties(){ const s=new Set(); QUOTES.forEach(q=>s.add(q.party)); return [...s].sort(); }
+
+function init(){
+  allParties().forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; $('party').appendChild(o); });
+  const chips=$('chips');
+  allTags().forEach(t=>{
+    const c=document.createElement('span'); c.className='chip'; c.textContent='#'+t;
+    c.onclick=()=>{ if(activeTags.has(t)){activeTags.delete(t);c.classList.remove('active');} else {activeTags.add(t);c.classList.add('active');} render(); };
+    chips.appendChild(c);
+  });
+  ['search','party','sort'].forEach(id=>$(id).addEventListener('input',render));
+  render();
+}
+
+function render(){
+  const q=$('search').value.trim().toLowerCase();
+  const party=$('party').value;
+  const sort=$('sort').value;
+  let items=QUOTES.filter(it=>{
+    if(party && it.party!==party) return false;
+    if(activeTags.size && ![...activeTags].every(t=>it.tags.includes(t))) return false;
+    if(q){
+      const hay=(it.text+' '+it.who+' '+it.party+' '+it.context+' '+it.tags.join(' ')).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  items.sort((a,b)=> sort==='new' ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
+  $('count').textContent = items.length + '건';
+
+  const list=$('list');
+  if(!items.length){ list.innerHTML='<div class="empty">조건에 맞는 발언이 없습니다.</div>'; return; }
+  list.innerHTML = items.map(it=>`
+    <div class="card">
+      <div class="quote">${esc(it.text)}</div>
+      <div class="meta">
+        <span class="who">${esc(it.who)}</span>
+        <span class="party">${esc(it.party)}</span>
+        <span>${esc(it.date)}</span>
+      </div>
+      <div class="ctx">${esc(it.context)}</div>
+      <div class="cardtags">${it.tags.map(t=>`<span class="cardtag">#${esc(t)}</span>`).join('')}</div>
+      <div class="src">출처: ${it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.source)} ↗</a>` : esc(it.source)}</div>
+    </div>`).join('');
+}
+
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+init();
+</script>
+</body>
+</html>
