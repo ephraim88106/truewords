@@ -36,6 +36,8 @@
   .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
   .chip{padding:5px 11px;background:var(--tag);color:var(--tagtxt);border:1px solid transparent;border-radius:20px;font-size:12px;cursor:pointer;user-select:none}
   .chip.active{background:var(--accent2);color:#fff}
+  .chip.hidden{display:none}
+  .chip-more{background:transparent;color:var(--muted);border:1px dashed var(--line)}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;transition:.15s}
   .card:hover{border-color:#3a4150}
   .quote{font-size:18px;font-weight:600;letter-spacing:-.3px;margin-bottom:14px}
@@ -48,6 +50,7 @@
   .ctx{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);color:#c4c9d2;font-size:14px}
   .cardtags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
   .cardtag{font-size:11px;color:var(--tagtxt);background:var(--tag);padding:3px 9px;border-radius:14px;cursor:pointer}
+  .cardtag-more{font-size:11px;color:var(--muted);padding:3px 6px}
   .src{margin-top:12px;font-size:13px}
   .src a{color:var(--accent2);text-decoration:none}
   .src a:hover{text-decoration:underline}
@@ -152,18 +155,41 @@ function renderFlips(){
 const $ = id => document.getElementById(id);
 let activeTags = new Set();
 
-function allTags(){ const s=new Set(); QUOTES.forEach(q=>q.tags.forEach(t=>s.add(t))); return [...s].sort(); }
+// 빈도순(자주 쓰인 태그가 앞)으로 정렬해 반환
+function allTags(){
+  const cnt={};
+  QUOTES.forEach(q=>q.tags.forEach(t=>cnt[t]=(cnt[t]||0)+1));
+  return Object.keys(cnt).sort((a,b)=> cnt[b]-cnt[a] || a.localeCompare(b));
+}
+const TOP_CHIPS = 12; // 기본 노출 칩 개수, 나머지는 '더보기'로 접음
 function uniq(key){ return [...new Set(QUOTES.map(q=>q[key]))].sort(); }
 
 function init(){
   uniq('party').forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; $('party').appendChild(o); });
   uniq('role').forEach(r=>{ const o=document.createElement('option'); o.value=r; o.textContent=r; $('role').appendChild(o); });
   const chips=$('chips');
-  allTags().forEach(t=>{
-    const c=document.createElement('span'); c.className='chip'; c.textContent='#'+t;
+  const tags=allTags();
+  tags.forEach((t,i)=>{
+    const c=document.createElement('span');
+    c.className='chip'+(i>=TOP_CHIPS?' hidden':'');
+    c.textContent='#'+t;
     c.onclick=()=>{ if(activeTags.has(t)){activeTags.delete(t);c.classList.remove('active');} else {activeTags.add(t);c.classList.add('active');} render(); };
     chips.appendChild(c);
   });
+  // 숨겨진 태그가 있으면 '더보기/접기' 토글 추가
+  if(tags.length>TOP_CHIPS){
+    const more=document.createElement('span');
+    more.className='chip chip-more';
+    let open=false;
+    const rest=tags.length-TOP_CHIPS;
+    more.textContent='+'+rest+'개 더보기';
+    more.onclick=()=>{
+      open=!open;
+      chips.querySelectorAll('.chip:not(.chip-more)').forEach((c,i)=>{ if(i>=TOP_CHIPS) c.classList.toggle('hidden',!open); });
+      more.textContent = open ? '접기' : '+'+rest+'개 더보기';
+    };
+    chips.appendChild(more);
+  }
   ['search','party','role','sort'].forEach(id=>$(id).addEventListener('input',render));
   render();
   renderFlips();
@@ -205,7 +231,7 @@ function render(){
         <span>${esc(it.date)}</span>
       </div>
       <div class="ctx">${esc(it.context)}</div>
-      <div class="cardtags">${it.tags.map(t=>`<span class="cardtag" data-tag="${esc(t)}">#${esc(t)}</span>`).join('')}</div>
+      <div class="cardtags">${it.tags.slice(0,3).map(t=>`<span class="cardtag" data-tag="${esc(t)}">#${esc(t)}</span>`).join('')}${it.tags.length>3?`<span class="cardtag-more">+${it.tags.length-3}</span>`:''}</div>
       <div class="src">출처: <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.source)}</a></div>
     </div>
   `).join('');
