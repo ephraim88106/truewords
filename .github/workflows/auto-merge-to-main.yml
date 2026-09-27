@@ -1,0 +1,33 @@
+name: Auto fast-forward main
+
+on:
+  push:
+    branches:
+      - 'claude/**'
+
+permissions:
+  contents: write
+
+jobs:
+  fast-forward:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Fast-forward main to pushed branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin "${{ github.ref_name }}"
+          if git merge-base --is-ancestor origin/main "origin/${{ github.ref_name }}"; then
+            git merge --ff-only "origin/${{ github.ref_name }}"
+            git push origin main
+            echo "Fast-forwarded main to $(git rev-parse HEAD)"
+          else
+            echo "::error::main and ${{ github.ref_name }} have diverged; not a fast-forward. Merge manually."
+            exit 1
+          fi
